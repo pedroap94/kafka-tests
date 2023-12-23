@@ -1,0 +1,9 @@
+spring:
+  kafka:
+    bootstrap-server: "localhost:19092"
+    producer:
+      transaction-id: "dev"
+      topic: test-topic
+    consumer:
+      group-id: "first"
+      topic: test-topic
