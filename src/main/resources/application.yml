@@ -1,6 +1,6 @@
 spring:
   kafka:
-    bootstrap-server: "localhost:19092"
+    bootstrap-servers: "localhost:19092"
     producer:
       transaction-id: "dev"
       topic: test-topic

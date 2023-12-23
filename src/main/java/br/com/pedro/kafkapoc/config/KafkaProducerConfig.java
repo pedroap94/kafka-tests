@@ -9,6 +9,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.transaction.KafkaTransactionManager;
 
 import java.util.Map;
 
@@ -16,7 +17,7 @@ import java.util.Map;
 @Configuration
 public class KafkaProducerConfig<K, V> {
 
-    @Value("${spring.kafka.bootstrap-server}")
+    @Value("${spring.kafka.bootstrap-servers}")
     private String producerServer;
 
     @Value("${spring.kafka.producer.transaction-id}")
@@ -39,5 +40,10 @@ public class KafkaProducerConfig<K, V> {
     @Bean
     public KafkaTemplate<K, V> kafkaTemplate() {
         return new KafkaTemplate<>(factoryProducer());
+    }
+
+    @Bean
+    public KafkaTransactionManager<K,V> kafkaTransactionManager() {
+        return new KafkaTransactionManager<>(factoryProducer());
     }
 }
