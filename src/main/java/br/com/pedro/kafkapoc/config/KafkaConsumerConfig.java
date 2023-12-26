@@ -42,8 +42,8 @@ public class KafkaConsumerConfig<K, V> {
                         ConsumerConfig.ISOLATION_LEVEL_CONFIG, IsolationLevel.READ_COMMITTED.toString().toLowerCase(),
                         ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
                         ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
-                        ConsumerConfig.GROUP_ID_CONFIG, groupId,
-                        ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1"
+                        ConsumerConfig.GROUP_ID_CONFIG, groupId
+//                        ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "3"
                 )
         );
     }
@@ -56,7 +56,6 @@ public class KafkaConsumerConfig<K, V> {
         factory.getContainerProperties().setMissingTopicsFatal(false);
 
         factory.getContainerProperties().setSyncCommits(Boolean.TRUE);
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
 //        factory.setBatchListener(Boolean.TRUE);
 //        factory.setConcurrency(5);
         factory.setCommonErrorHandler(errorHandler());
@@ -67,8 +66,9 @@ public class KafkaConsumerConfig<K, V> {
 
     @Bean
     public DefaultErrorHandler errorHandler() {
-//        ExponentialBackOff backoff = new ExponentialBackOff(1000L, 2);
-//        backoff.setMaxAttempts(5);
-        return new DefaultErrorHandler((consumerRecord, e) -> log.info("Fail to retry message"));
+        ExponentialBackOff backoff = new ExponentialBackOff(1000L, 2);
+        backoff.setMaxAttempts(5);
+        return new DefaultErrorHandler((consumerRecord, e) -> log.info("Fail to retry message"), backoff);
     }
+
 }
